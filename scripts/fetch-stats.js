@@ -47,6 +47,7 @@ const text = async (p) => {
   fs.writeFileSync("data/stats.json", JSON.stringify({
     updated: new Date().toISOString(),
     server: { name: server.name, address: server.address, status: server.status },
+    online: (server.players && server.players.list) || [],
     players,
   }));
   console.log(`Saved ${players.length} players`);

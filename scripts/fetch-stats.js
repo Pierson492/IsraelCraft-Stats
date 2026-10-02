@@ -1,6 +1,8 @@
 // Pulls player stat files from your Exaroton server and writes data/stats.json
 const fs = require("fs");
 const { EXAROTON_TOKEN: T, EXAROTON_SERVER_ID: S, WORLD_NAME = "world" } = process.env;
+// Players to leave off the site (by UUID)
+const EXCLUDE = new Set(["00000000-0000-0000-0009-01fe97d5c010"]);
 if (!T || !S) throw new Error("Missing EXAROTON_TOKEN or EXAROTON_SERVER_ID secret");
 
 const api = (p) => fetch(`https://api.exaroton.com/v1/servers/${S}/${p}`, {
@@ -39,6 +41,7 @@ const text = async (p) => {
   for (const f of dir.children || []) {
     if (!f.name.endsWith(".json")) continue;
     const uuid = f.name.replace(".json", "");
+    if (EXCLUDE.has(uuid)) continue;
     try {
       const s = JSON.parse(await text(`files/data/${base}/${f.name}`));
       players.push({ uuid, name: names[uuid] || uuid.slice(0, 8), stats: s.stats || {} });

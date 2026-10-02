@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server Stats</title>
+<style>
+:root{--bg:#171a1f;--panel:#1f2329;--panel2:#272c34;--line:#323843;--text:#e8ebef;--mute:#8d96a3;--green:#29c76f;--red:#ea5455}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:16px 24px;background:var(--panel);border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0 auto 0 0}
+.status{color:var(--mute);font-size:13px}
+input,select,button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font:inherit}
+button{cursor:pointer;background:var(--green);border-color:var(--green);color:#08210f;font-weight:600}
+button:hover{filter:brightness(1.1)} button:disabled{opacity:.6}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+main{max-width:1100px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.card:hover{border-color:var(--green)}
+.who{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.who img{width:44px;height:44px;border-radius:4px;image-rendering:pixelated}
+.who b{font-size:16px}
+.row{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;padding:2px 0}
+.row span:last-child{color:var(--text)}
+.empty{grid-column:1/-1;color:var(--mute);text-align:center;padding:40px}
+dialog{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh}
+dialog::backdrop{background:#000a}
+.dh{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dh img{width:52px;height:52px;border-radius:4px;image-rendering:pixelated}
+.dh h2{margin:0;font-size:20px;flex:1}
+.x{background:none;border:0;color:var(--mute);font-size:22px;padding:0 6px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:12px 20px 0}
+.tab{background:var(--panel2);color:var(--mute);border:1px solid var(--line);font-weight:400;padding:6px 10px;font-size:13px}
+.tab.on{background:var(--green);color:#08210f;font-weight:600;border-color:var(--green)}
+.list{padding:8px 20px 18px;overflow:auto;max-height:55vh}
+.list .row{font-size:14px;border-bottom:1px solid var(--line);padding:6px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>⛏️ Player Stats</h1>
+  <span class="status" id="status">Loading…</span>
+  <input id="q" type="search" placeholder="Search players" aria-label="Search players">
+  <select id="sort" aria-label="Sort players">
+    <option value="time">Most playtime</option><option value="name">Name</option>
+    <option value="deaths">Most deaths</option><option value="mobs">Most mobs killed</option>
+    <option value="mined">Most blocks mined</option>
+  </select>
+  <button id="refresh">🔄 Refresh</button>
+</header>
+<main id="grid"></main>
+<dialog id="dlg"></dialog>
+<script>
+const C = "minecraft:";
+const $ = (id) => document.getElementById(id);
+let data = { players: [] };
+
+const sum = (o) => Object.values(o || {}).reduce((a, b) => a + b, 0);
+const get = (p, grp, k) => (p.stats[C + grp] || {})[C + k] || 0;
+const ticks = (p) => get(p, "custom", "play_time") || get(p, "custom", "play_one_minute");
+const hrs = (t) => { const m = Math.floor(t / 1200); return m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m}m`; };
+const pretty = (k) => k.replace(C, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const dist = (cm) => cm >= 100000 ? (cm / 100000).toFixed(1) + " km" : Math.round(cm / 100) + " m";
+const num = (n) => n.toLocaleString();
+const mobs = (p) => sum(p.stats[C + "killed"]);
+const mined = (p) => sum(p.stats[C + "mined"]);
+
+const TABS = [
+  ["📊 General", "custom"], ["⛏️ Mined", "mined"], ["🔨 Crafted", "crafted"],
+  ["🖐️ Used", "used"], ["⚔️ Killed", "killed"], ["💀 Killed by", "killed_by"],
+  ["📦 Picked up", "picked_up"], ["🗑️ Dropped", "dropped"],
+];
+function fmt(grp, k, v) {
+  if (grp !== "custom") return num(v);
+  if (/time|minute|since/.test(k)) return hrs(v);
+  if (/_one_cm|_cm$|damage|absorbed|resisted/.test(k)) return /damage|absorbed|resisted/.test(k) ? num(Math.round(v / 10)) + " ❤" : dist(v);
+  return num(v);
+}
+
+function render() {
+  const q = $("q").value.toLowerCase(), s = $("sort").value;
+  const key = { time: ticks, deaths: (p) => get(p, "custom", "deaths"), mobs, mined }[s];
+  const list = data.players.filter((p) => p.name.toLowerCase().includes(q))
+    .sort((a, b) => s === "name" ? a.name.localeCompare(b.name) : key(b) - key(a));
+  $("grid").innerHTML = list.length ? "" : '<div class="empty">No players found.</div>';
+  list.forEach((p) => {
+    const b = document.createElement("button");
+    b.className = "card";
+    b.innerHTML = `<div class="who"><img alt="" src="https://mc-heads.net/avatar/${p.uuid}/88"><b></b></div>
+      <div class="row"><span>⏱️ Playtime</span><span>${hrs(ticks(p))}</span></div>
+      <div class="row"><span>💀 Deaths</span><span>${num(get(p, "custom", "deaths"))}</span></div>
+      <div class="row"><span>⚔️ Mobs killed</span><span>${num(mobs(p))}</span></div>
+      <div class="row"><span>⛏️ Blocks mined</span><span>${num(mined(p))}</span></div>`;
+    b.querySelector("b").textContent = p.name;
+    b.onclick = () => open(p);
+    $("grid").append(b);
+  });
+}
+
+function open(p, tab = 0) {
+  const [, grp] = TABS[tab];
+  const rows = Object.entries(p.stats[C + grp] || {}).sort((a, b) => b[1] - a[1]);
+  const d = $("dlg");
+  d.innerHTML = `<div class="dh"><img alt="" src="https://mc-heads.net/avatar/${p.uuid}/104"><h2></h2><button class="x" aria-label="Close">×</button></div>
+    <div class="tabs">${TABS.map((t, i) => `<button class="tab ${i === tab ? "on" : ""}" data-i="${i}">${t[0]}</button>`).join("")}</div>
+    <div class="list">${rows.length ? "" : '<div class="empty">Nothing recorded yet.</div>'}</div>`;
+  d.querySelector("h2").textContent = p.name;
+  const l = d.querySelector(".list");
+  rows.forEach(([k, v]) => {
+    const r = document.createElement("div"); r.className = "row";
+    r.innerHTML = "<span></span><span></span>";
+    r.children[0].textContent = pretty(k); r.children[1].textContent = fmt(grp, k, v);
+    l.append(r);
+  });
+  d.querySelector(".x").onclick = () => d.close();
+  d.querySelectorAll(".tab").forEach((t) => t.onclick = () => open(p, +t.dataset.i));
+  if (!d.open) d.showModal();
+}
+
+async function load() {
+  const btn = $("refresh"); btn.disabled = true;
+  try {
+    data = await (await fetch("data/stats.json?t=" + Date.now())).json();
+    const t = data.updated ? new Date(data.updated).toLocaleString() : "never (run the workflow first)";
+    $("status").textContent = "Updated " + t;
+    render();
+  } catch { $("status").textContent = "Couldn't load stats"; }
+  btn.disabled = false;
+}
+$("refresh").onclick = load; $("q").oninput = render; $("sort").onchange = render;
+$("dlg").addEventListener("click", (e) => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+load(); setInterval(load, 60000);
+</script>
+</body>
+</html>

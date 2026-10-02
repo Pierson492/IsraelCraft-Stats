@@ -2,24 +2,32 @@ name: Update stats
 on:
   schedule:
     - cron: "*/10 * * * *"   # every 10 min (GitHub may delay this a bit)
-  workflow_dispatch: {}       # lets you run it by hand from the Actions tab
+  workflow_dispatch: {}       # run by hand, or by the site's Refresh button
 permissions:
   contents: write
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with: { node-version: 22 }
       - run: node scripts/fetch-stats.js
         env:
           EXAROTON_TOKEN: ${{ secrets.EXAROTON_TOKEN }}
           EXAROTON_SERVER_ID: ${{ secrets.EXAROTON_SERVER_ID }}
           WORLD_NAME: world   # change if your world folder has a different name
+      - name: Fetch icons
+        continue-on-error: true
+        run: node scripts/fetch-icons.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Commit changes
         run: |
           git config user.name "stats-bot"
           git config user.email "stats-bot@users.noreply.github.com"
-          git add data/stats.json
-          git diff --staged --quiet || (git commit -m "Update stats" && git push)
+          git add data icons
+          git diff --staged --quiet || (git commit -m "Update stats" && git pull --rebase && git push)

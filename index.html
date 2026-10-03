@@ -103,7 +103,7 @@ h3::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--g
 </div></header>
 <main class="wrap" id="app"></main>
 <script>
-const WORKER = "";   // paste your Cloudflare Worker address here to make Refresh run the workflow
+const WORKER = "https://mc-stats.dietzp29.workers.dev";   // paste your Cloudflare Worker address here to make Refresh run the workflow
 const HIDE = new Set(["00000000-0000-0000-0009-01fe97d5c010"]);
 const C = "minecraft:", LIMIT = 25;
 const $ = (s, el = document) => el.querySelector(s), sleep = (ms) => new Promise((r) => setTimeout(r, ms));

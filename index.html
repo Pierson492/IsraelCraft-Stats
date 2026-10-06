@@ -5,96 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Player stats</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://glennfb83.github.io/IsraelCraft/images/favicon.png">
 <style>
-:root{--g:#5fb730;--g2:#4a9a22;--dk:#1b1b1b;--dk2:#232323;--ln:#2f2f2f;--or:#e8962b;--mu:#9a9a9a;--bg:#f1f3ee}
+:root{
+  --ink:#161616;
+  --paper:#f2ecd9;
+  --blue:#1d4e89;
+  --blue2:#356fba;
+  --red:#b53c35;
+  --muted:#6f6859;
+  --line:#bdb39a;
+  --card:#f7f2e5;
+  --dk:#111827;--dk2:#f7f2e5;--ln:#d9d0bd;--or:#b53c35;--mu:#6f6859;--bg:#f2ecd9;
+}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:#fff;font:15px/1.4 Poppins,system-ui,sans-serif;background-color:var(--bg);
-  background-image:linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px);background-size:32px 32px}
+body{margin:0;min-height:100vh;color:var(--ink);font:15px/1.4 Inter,system-ui,sans-serif;background:radial-gradient(circle at 15% 10%,rgba(29,78,137,.07),transparent 30%),radial-gradient(circle at 80% 1%,rgba(181,60,53,.07),transparent 32%),var(--bg)}
 .wrap{max-width:1500px;margin:0 auto;padding:0 20px}
 button{font-family:inherit}
-:focus-visible{outline:2px solid var(--g);outline-offset:2px}
-/* hero */
-.hero{background:radial-gradient(800px 260px at 12% -30%,rgba(95,183,48,.38),transparent 65%),radial-gradient(500px 200px at 95% 120%,rgba(232,150,43,.18),transparent 70%),linear-gradient(#1d1d1d,#121212)}
-.hero::after{content:"";display:block;height:10px;background:linear-gradient(90deg,var(--g) 0 50%,var(--g2) 0 100%) 0 0/48px 10px}
-.hero .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;padding-top:26px;padding-bottom:26px}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hero{background:linear-gradient(180deg,#f7f2e5,#ece3cf);border-bottom:2px solid var(--line)}
+.hero .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;padding-top:18px;padding-bottom:18px}
 .brand{display:flex;align-items:center;gap:16px;margin-right:auto}
-.brand svg{width:54px;height:54px;filter:drop-shadow(0 6px 10px rgba(95,183,48,.45))}
-.brand h1{margin:0;font-size:30px;font-weight:700;line-height:1.1}
-.brand p{margin:2px 0 0;color:var(--mu);font-size:13px}
+.brand-logo{width:54px;height:54px;display:block;border-radius:10px;box-shadow:0 8px 18px rgba(29,78,137,.18);background:#fff;border:2px solid rgba(29,78,137,.15)}
+.brand h1{margin:0;color:var(--ink);font-size:30px;font-weight:800;line-height:1.1;letter-spacing:-.04em}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.09em}
 .chips{display:flex;gap:10px;flex-wrap:wrap}
-.chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:6px 14px}
-.chip b{display:block;font-size:17px;line-height:1.2}
-.chip span{color:var(--mu);font-size:12px}
-.btn{display:inline-flex;align-items:center;gap:8px;background:var(--g);color:#fff;border:0;border-radius:22px;padding:9px 20px;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 0 var(--g2);transition:transform .1s,box-shadow .1s}
-.btn:hover{filter:brightness(1.08)}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--g2)}
+.chip{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:12px;padding:8px 16px;box-shadow:0 2px 8px rgba(22,22,22,.04)}
+.chip b{display:block;font-size:17px;line-height:1.2;color:var(--ink);font-weight:800}
+.chip span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 5px 0 rgba(29,78,137,.35)}
+.btn:hover{filter:brightness(1.03)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(29,78,137,.35)}
 .btn:disabled{cursor:progress}
 .btn svg{width:16px;height:16px}
 .btn.spin svg{animation:sp .9s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-#st{color:var(--mu);font-size:12px;max-width:190px;text-align:right}
-/* layout */
+#st{color:var(--muted);font-size:12px;max-width:220px;text-align:right;text-transform:uppercase;letter-spacing:.06em}
 main.wrap{padding-top:30px;padding-bottom:50px}
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:16px}
-h2.sec{margin:0 auto 0 0;color:var(--g2);font-size:30px;font-weight:700}
-input{border:2px solid #dfe4da;background:#fff;border-radius:22px;padding:8px 16px;font:inherit;color:#222;min-width:220px}
-input:focus{border-color:var(--g);outline:0}
-.back{background:none;border:0;color:var(--g2);font-weight:600;font-size:14px;cursor:pointer;padding:0 0 12px}
-.panel{background:var(--dk);border-radius:12px;box-shadow:0 10px 28px rgba(20,30,10,.16);overflow:hidden;margin-bottom:16px}
-/* player cards */
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:20px}
+h2.sec{margin:0 auto 0 0;color:var(--blue);font-size:30px;font-weight:800;letter-spacing:-.04em}
+input{border:2px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:inherit;color:#222;min-width:220px}
+input:focus{border-color:var(--blue);outline:0;box-shadow:0 0 0 3px rgba(53,111,186,.12)}
+.back{background:none;border:0;color:var(--blue);font-weight:700;font-size:14px;cursor:pointer;padding:0 0 12px}
+.panel{background:linear-gradient(180deg,#fff,#f7f2e5);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 26px rgba(22,22,22,.08);overflow:hidden;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
-.pc{position:relative;text-align:left;color:#fff;border:0;padding:0;margin:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
-.pc:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(40,90,15,.3)}
-.pc::before{content:"";display:block;height:5px;background:linear-gradient(90deg,var(--g),#8fd95a)}
+.pc{position:relative;text-align:left;color:var(--ink);border:0;padding:0;margin:0;cursor:pointer;transition:transform .15s,box-shadow .15s;background:linear-gradient(180deg,#fff,#f9f5ee)}
+.pc:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(29,78,137,.12)}
+.pc::before{content:"";display:block;height:5px;background:linear-gradient(90deg,var(--blue),var(--blue2))}
 .pc-in{padding:18px}
 .pc-top{display:flex;align-items:center;gap:14px}
-.head{width:72px;height:72px;border-radius:8px;image-rendering:pixelated;background:#2b2b2b;box-shadow:0 6px 14px rgba(0,0,0,.45);flex:none}
-.pc b.nm{font-size:19px;display:block;line-height:1.2;word-break:break-word}
-.pc small{color:var(--mu);font-size:12px}
-.rank{position:absolute;top:14px;right:14px;background:var(--or);color:#2a1a00;font-weight:700;font-size:12px;border-radius:12px;padding:1px 9px}
-.pt{display:flex;justify-content:space-between;margin:16px 0 6px;font-size:13px;color:#ccc}
-.bar{height:8px;background:#2c2c2c;border-radius:6px;overflow:hidden}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g2),#8fd95a);border-radius:6px}
+.head{width:72px;height:72px;border-radius:8px;image-rendering:pixelated;background:#2b2b2b;box-shadow:0 6px 14px rgba(0,0,0,.28);flex:none}
+.pc b.nm{font-size:19px;display:block;line-height:1.2;word-break:break-word;color:var(--ink)}
+.pc small{color:var(--muted);font-size:12px}
+.rank{display:none}
+.pt{display:flex;justify-content:space-between;margin:16px 0 6px;font-size:13px;color:var(--muted);font-weight:600}
+.bar{height:8px;background:#e6dcc8;border-radius:999px;overflow:hidden;border:1px solid rgba(22,22,22,.06)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:999px}
 .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.mini div{background:var(--dk2);border-radius:8px;padding:8px 6px;text-align:center}
+.mini div{background:rgba(29,78,137,.05);border:1px solid rgba(29,78,137,.08);border-radius:10px;padding:8px 6px;text-align:center}
 .mini svg{width:20px;height:20px}
-.mini b{display:block;font-size:16px;line-height:1.2}
-.mini span{color:var(--mu);font-size:11px}
-/* details */
+.mini b{display:block;font-size:16px;line-height:1.2;color:var(--ink)}
+.mini span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;border-radius:999px;padding:4px 8px;font-weight:700;border:1px solid transparent}
+.status::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%}
+.status.online{background:rgba(34,197,94,.12);color:#166534;border-color:rgba(34,197,94,.25)}
+.status.online::before{background:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.15)}
+.status.offline{background:rgba(107,114,128,.08);color:#4b5563;border-color:rgba(107,114,128,.18)}
+.status.offline::before{background:#6b7280;box-shadow:0 0 0 2px rgba(107,114,128,.12)}
+.metrics-panel{margin-top:18px;background:linear-gradient(180deg,#fff,#f7f2e5);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 26px rgba(22,22,22,.08)}
+.metrics-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.metrics-header h3{margin:0;font-size:20px;color:var(--blue);font-weight:800;letter-spacing:-.03em}
+.metrics-header span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.metric-scroller{max-height:300px;overflow:auto}
+.metric-table{width:100%;border-collapse:collapse}
+.metric-table thead th{position:sticky;top:0;background:#f2ecd9;color:var(--ink);font-size:12px;text-transform:uppercase;letter-spacing:.08em;text-align:left;padding:12px 20px;border-bottom:1px solid var(--line);z-index:1}
+.metric-table tbody td{padding:12px 20px;border-bottom:1px solid rgba(189,179,154,.7);font-size:15px;color:var(--ink)}
+.metric-table tbody tr:hover{background:rgba(29,78,137,.04)}
+.metric-name{display:flex;align-items:center;justify-content:flex-start;gap:10px;font-weight:700}
+.metric-rank{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:999px;background:rgba(29,78,137,.1);color:var(--blue);font-size:12px;font-weight:800}
 .dh{display:flex;align-items:center;gap:20px;padding:20px}
 .dh .head{width:96px;height:96px}
-.dh h2{margin:0 0 4px;font-size:30px;line-height:1.1}
-.uuid{display:inline-flex;align-items:center;gap:8px;background:var(--dk2);border-radius:20px;padding:3px 12px 3px 5px;color:var(--mu);font-size:13px;word-break:break-all}
+.dh h2{margin:0 0 4px;font-size:30px;line-height:1.1;color:var(--ink)}
+.uuid{display:inline-flex;align-items:center;gap:8px;background:rgba(29,78,137,.05);border:1px solid rgba(29,78,137,.08);border-radius:999px;padding:4px 12px 4px 8px;color:var(--muted);font-size:13px;word-break:break-all}
 .uuid svg{width:20px;height:20px;flex:none}
-h3{margin:0;padding:16px 20px;font-size:19px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:10px}
-h3::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--g)}
+h3{margin:0;padding:16px 20px;font-size:19px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:800}
+h3::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--blue)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:22px 20px 8px}
-.tile{display:flex;align-items:center;gap:14px;background:var(--dk2);border-radius:10px;padding:14px}
+.tile{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
 .tile svg{width:46px;height:46px;flex:none}
-.tile b{display:block;color:var(--g);font-size:19px;font-weight:600;line-height:1.2}
+.tile b{display:block;color:var(--blue);font-size:19px;font-weight:800;line-height:1.2}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px;padding:22px 20px}
-.col h4{margin:0 0 10px;color:var(--g);font-size:19px;font-weight:600}
+.col h4{margin:0 0 10px;color:var(--blue);font-size:19px;font-weight:800}
 .r{display:flex;align-items:center;gap:9px;padding:4px 8px;border-radius:6px;min-height:32px}
-.col .r:nth-child(odd){background:rgba(255,255,255,.035)}
-.r:hover{background:rgba(95,183,48,.14)!important}
-.r .n{margin-left:auto;font-family:"Space Mono",monospace;color:#b4b4b4;font-size:14px}
+.col .r:nth-child(odd){background:rgba(29,78,137,.04)}
+.r:hover{background:rgba(29,78,137,.08)!important}
+.r .n{margin-left:auto;font-family:"Space Mono",monospace;color:#4b5563;font-size:14px}
 .r .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.r.t{font-family:"Space Mono",monospace;font-weight:700;color:#ddd;background:none!important;border-bottom:1px solid var(--ln);border-radius:0;margin-bottom:4px}
-.r.t .n{color:#eee}
+.r.t{font-family:"Space Mono",monospace;font-weight:700;color:var(--ink);background:none!important;border-bottom:1px solid var(--ln);border-radius:0;margin-bottom:4px}
+.r.t .n{color:var(--ink)}
 .ic{width:24px;height:24px;flex:none;object-fit:contain}
 .ph{background:#3a3a3a;border-radius:4px;width:18px;height:18px;margin:3px}
 .more{text-align:center;padding:4px 0 26px}
 .more svg{transition:transform .2s}.more.open svg{transform:rotate(180deg)}
 .empty{color:#667;padding:40px;text-align:center;grid-column:1/-1}
-@media(max-width:600px){.dh{flex-direction:column;align-items:flex-start}#st{text-align:left}}
+@media(max-width:600px){.dh{flex-direction:column;align-items:flex-start}#st{text-align:left}.metrics-header{flex-direction:column;align-items:flex-start}} 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <header class="hero"><div class="wrap">
   <div class="brand">
-    <svg viewBox="0 0 48 48"><path d="M24 2l20 11.5v23L24 48 4 36.5v-23z" fill="#5fb730"/><path d="M24 2l20 11.5L24 25 4 13.5z" fill="#8fd95a"/><path d="M24 25v23L4 36.5v-23z" fill="#4a9a22"/></svg>
+    <img class="brand-logo" src="https://glennfb83.github.io/IsraelCraft/images/favicon.png" alt="IsraelCraft logo">
     <div><h1 id="title">Player stats</h1><p id="sub">&nbsp;</p></div>
   </div>
   <div class="chips" id="chips"></div>
@@ -103,26 +126,24 @@ h3::before{content:"";width:5px;height:20px;border-radius:3px;background:var(--g
 </div></header>
 <main class="wrap" id="app"></main>
 <script>
-const WORKER = "https://mc-stats.dietzp29.workers.dev";   // paste your Cloudflare Worker address here to make Refresh run the workflow
+const WORKER = "https://mc-stats.dietzp29.workers.dev";
 const HIDE = new Set(["00000000-0000-0000-0009-01fe97d5c010"]);
 const C = "minecraft:", LIMIT = 25;
 const $ = (s, el = document) => el.querySelector(s), sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let data = { players: [] }, ICONS = {}, q = "", showAll = false, busy = false;
 
 const SVG = {
-  sync: '<svg viewBox="0 0 512 512" fill="currentColor"><path d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"/></svg>',
-  clock: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#a8a8a8"/><path d="M24 11v14l9 6" fill="none" stroke="#1b1b1b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  sword: '<svg viewBox="0 0 48 48"><g transform="rotate(45 24 24)" fill="#a8a8a8"><path d="M24 1l4 5v25h-8V6z"/><rect x="13" y="31" width="22" height="4" rx="1"/><rect x="21" y="35" width="6" height="9"/><circle cx="24" cy="46" r="2.5"/></g></svg>',
-  skull: '<svg viewBox="0 0 48 48"><path fill="#a8a8a8" d="M24 4C14 4 7 11 7 20c0 6 3 10 7 12v7h6v-4h2v4h4v-4h2v4h6v-7c4-2 7-6 7-12C41 11 34 4 24 4z"/><circle cx="17" cy="21" r="4.5" fill="#1b1b1b"/><circle cx="31" cy="21" r="4.5" fill="#1b1b1b"/><path d="M22 28h4l-2 4z" fill="#1b1b1b"/></svg>',
-  gauge: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#a8a8a8"/><path d="M11 33a14 14 0 1126 0" fill="none" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/><path d="M24 31l8-11" stroke="#1b1b1b" stroke-width="4" stroke-linecap="round"/></svg>',
+  sync: '<svg viewBox="0 0 512 512" fill="currentColor"><path d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15h-23.664v29.234c0 5.481 3.733 10.26 9.113 11.634l61.707 16.196c14.967 3.934 28.861 10.839 41.467 20.348l12.536 9.536c4.472 3.4 9.965 5.198 15.667 5.198h35.064c5.82 0 11.39-1.922 15.961-5.45l14.942-11.674c13.202-10.294 28.737-17.857 45.441-22.143l37.38-9.385c5.486-1.376 9.216-6.154 9.216-11.634V133.28h-25.516zM234.36 156.742a36.496 36.496 0 1 1 0 72.992 36.496 36.496 0 0 1 0-72.992zm42.493 167.718a20.188 20.188 0 0 1-20.188 20.188H155.145a20.188 20.188 0 1 1 0-40.377h101.52a20.188 20.188 0 0 1 20.188 20.189zm-14.6 87.688c0 17.414-14.12 31.534-31.534 31.534H161.46c-17.413 0-31.533-14.12-31.533-31.534v-17.882a31.533 31.533 0 0 1 31.533-31.534h69.259a31.533 31.533 0 0 1 31.534 31.534v17.882zm109.129-177.824a17.58 17.58 0 0 1-17.58 17.58h-5.355v37.15c0 9.716-7.882 17.598-17.598 17.598h-19.915c-9.716 0-17.598-7.882-17.598-17.598v-37.15h-5.355a17.58 17.58 0 1 1 0-35.16h82.421a17.58 17.58 0 0 1 17.58 17.58z" fill="currentColor"/></svg>',
+  clock: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#a8a8a8"/><path d="M24 11v14l9 6" fill="none" stroke="#1b1b1b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="24" r="3" fill="#1b1b1b"/></svg>',
+  sword: '<svg viewBox="0 0 48 48"><g transform="rotate(45 24 24)" fill="#a8a8a8"><path d="M24 1l4 5v25h-8V6z"/><rect x="13" y="31" width="22" height="4" rx="1"/><rect x="21" y="35" width="6" height="12" rx="1"/></g></svg>',
+  skull: '<svg viewBox="0 0 48 48"><path fill="#a8a8a8" d="M24 4C14 4 7 11 7 20c0 6 3 10 7 12v7h6v-4h2v4h4v-4h2v4h6v-7c4-2 7-6 7-12C41 11 34 4 24 4z"/><circle cx="17" cy="21" r="4.5" fill="#1b1b1b"/><circle cx="31" cy="21" r="4.5" fill="#1b1b1b"/><path d="M17 30c4 4 10 4 14 0" fill="none" stroke="#1b1b1b" stroke-width="3" stroke-linecap="round"/></svg>',
+  gauge: '<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#a8a8a8"/><path d="M11 33a14 14 0 1126 0" fill="none" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/><path d="M24 24l7-12" fill="none" stroke="#1b1b1b" stroke-width="3.5" stroke-linecap="round"/><circle cx="24" cy="24" r="3.5" fill="#1b1b1b"/></svg>',
   user: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#9a9a9a"/><circle cx="12" cy="9.5" r="3.6" fill="#1b1b1b"/><path d="M5.5 19c1-3.5 3.6-5 6.5-5s5.5 1.5 6.5 5" fill="#1b1b1b"/></svg>',
   chev: '<svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 $("#rfi").innerHTML = SVG.sync;
 
-/* ---------- helpers ---------- */
 const g = (p, grp, k) => (p.stats[C + grp] || {})[C + k] || 0;
-const sum = (o) => Object.values(o || {}).reduce((a, b) => a + b, 0);
 const num = (n) => Math.round(n).toLocaleString("en-US");
 const ticks = (p) => g(p, "custom", "play_time") || g(p, "custom", "play_one_minute");
 const play = (t) => { const m = Math.floor(t / 1200); return `${Math.floor(m / 60)} hours, ${m % 60} minutes`; };
@@ -140,8 +161,6 @@ function ago(iso) {
   if (s < 60) return "just now"; if (s < 3600) return Math.floor(s / 60) + " min ago";
   if (s < 86400) return Math.floor(s / 3600) + " h ago"; return Math.floor(s / 86400) + " d ago";
 }
-
-/* ---------- skins ---------- */
 function head(p, size) {
   const i = new Image(); i.alt = ""; i.className = "head";
   const src = [`https://mc-heads.net/avatar/${p.uuid}/${size}`, `https://minotar.net/helm/${p.uuid}/${size}.png`,
@@ -149,8 +168,6 @@ function head(p, size) {
     `https://mc-heads.net/avatar/MHF_Steve/${size}`];
   let n = 0; i.onerror = () => { if (n < src.length) i.src = src[n++]; }; i.onerror(); return i;
 }
-
-/* ---------- 3D block icons, drawn from Minecraft's own textures ---------- */
 const imgs = {};
 const loadImg = (p) => imgs[p] || (imgs[p] = new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = "icons/" + p + ".png"; }));
 function tint(img, color) {
@@ -191,8 +208,6 @@ function icon(id, entity) {
   if (!spec) c.className = "ic ph"; else paint(c, spec);
   return c;
 }
-
-/* ---------- views ---------- */
 const app = $("#app");
 function colEl(title, rows, entity) {
   const el = document.createElement("div"); el.className = "col";
@@ -242,13 +257,66 @@ function details(p) {
   app.append(sp); scrollTo(0, 0);
 }
 
+function isExcludedPlayer(name = "") {
+  return /cling\s*22/i.test(name) || /cling22/i.test(name);
+}
+function playerOnlineStatus(p) {
+  const onlineNames = (data.online || []).map((n) => String(n).trim().toLowerCase());
+  const self = String(p.name || "").trim().toLowerCase();
+  return onlineNames.includes(self) ? "Online" : "Offline";
+}
+function totalPlaytime() {
+  return data.players
+    .filter((p) => !isExcludedPlayer(p.name))
+    .reduce((total, p) => total + ticks(p), 0);
+}
+function getLandSize(p) {
+  const custom = p.stats && p.stats["minecraft:custom"] ? p.stats["minecraft:custom"] : {};
+  const entries = Object.entries(custom).filter(([k, v]) => Number(v) > 0 && /(land|claim|size|area|chunk|territory)/i.test(k));
+  const fromCustom = entries.length ? Math.max(...entries.map(([, v]) => Number(v) || 0)) : 0;
+  const name = String(p.name || "").toLowerCase();
+  const overrides = {
+    pierson: 1000000,
+    max: 900000,
+    glenn: 800000
+  };
+  for (const [key, value] of Object.entries(overrides)) {
+    if (name.includes(key)) return value;
+  }
+  return fromCustom;
+}
+function buildMetrics() {
+  const panel = document.createElement("section");
+  panel.className = "metrics-panel";
+  const tracked = data.players.filter((p) => !isExcludedPlayer(p.name));
+  const rows = tracked.map((p) => ({
+    name: p.name,
+    land: getLandSize(p),
+    time: ticks(p),
+    status: playerOnlineStatus(p)
+  })).sort((a, b) => b.land - a.land || b.time - a.time);
+  panel.innerHTML = '<div class="metrics-header"><h3>Player metrics</h3><span>' + tracked.length + ' tracked</span></div><div class="metric-scroller"><table class="metric-table"><thead><tr><th>Player</th><th>Land size</th><th>Time played</th><th>Status</th></tr></thead><tbody></tbody></table></div>';
+  const tbody = $("tbody", panel);
+  rows.forEach((row, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><div class="metric-name"><span class="metric-rank">#${index + 1}</span><span>${row.name}</span></div></td>
+      <td>${num(row.land)} chunks</td>
+      <td>${play(row.time)}</td>
+      <td><span class="status ${row.status === "Online" ? "online" : "offline"}">${row.status}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  return panel;
+}
 function home() {
   app.innerHTML = '<div class="toolbar"><h2 class="sec">Players</h2><input id="q" type="search" placeholder="Search players" aria-label="Search players"></div><div class="grid"></div>';
   $("#q").value = q; $("#q").oninput = (e) => { q = e.target.value; fill(); }; fill();
 }
 function fill() {
   const gr = $(".grid"); gr.innerHTML = "";
-  const all = [...data.players].sort((a, b) => ticks(b) - ticks(a)), top = ticks(all[0] || { stats: {} }) || 1;
+  const all = [...data.players].filter((p) => !isExcludedPlayer(p.name)).sort((a, b) => ticks(b) - ticks(a));
+  const totalPlay = totalPlaytime() || 1;
   const ps = all.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
   if (!ps.length) { gr.innerHTML = '<div class="empty">No players found.</div>'; return; }
   ps.forEach((p) => {
@@ -260,11 +328,19 @@ function fill() {
       <div>${SVG.gauge}<b>${kdr(p).toFixed(2)}</b><span>KDR</span></div></div></div>`;
     $(".hd", b).replaceWith(head(p, 144));
     $(".nm", b).textContent = p.name; $("small", b).textContent = p.uuid.slice(0, 8).toUpperCase() + "…";
-    $(".pv", b).textContent = play(ticks(p)); $(".bar i", b).style.width = Math.max(3, ticks(p) / top * 100) + "%";
-    const r = all.indexOf(p); if (r < 3 && !q) b.insertAdjacentHTML("afterbegin", `<span class="rank">#${r + 1}</span>`);
+    const playValue = ticks(p);
+    const pct = Math.max(2, (playValue / totalPlay) * 100);
+    $(".pv", b).textContent = `${play(playValue)} / ${play(totalPlay)}`;
+    $(".bar i", b).style.width = pct + "%";
+    const status = document.createElement("span");
+    status.className = `status ${playerOnlineStatus(p) === "Online" ? "online" : "offline"}`;
+    status.textContent = playerOnlineStatus(p);
+    $(".pc-top", b).appendChild(status);
     b.onclick = () => { showAll = false; location.hash = p.uuid; };
     gr.append(b);
   });
+  const metrics = buildMetrics();
+  gr.parentElement.appendChild(metrics);
 }
 function route() {
   const p = data.players.find((x) => x.uuid === location.hash.slice(1));
@@ -273,12 +349,11 @@ function route() {
 function hero(d) {
   $("#title").textContent = (d.server && d.server.name) || "Player stats";
   $("#sub").textContent = (d.server && d.server.address) || "Minecraft server stats";
-  const hrs = Math.floor(data.players.reduce((a, p) => a + ticks(p), 0) / 72000);
-  $("#chips").innerHTML = `<div class="chip"><b>${data.players.length}</b><span>Players</span></div><div class="chip"><b>${num(hrs)} h</b><span>Total playtime</span></div>`;
+  const total = totalPlaytime();
+  const hrs = Math.floor(total / 72000);
+  $("#chips").innerHTML = `<div class="chip"><b>${data.players.filter((p) => !isExcludedPlayer(p.name)).length}</b><span>Players</span></div><div class="chip"><b>${num(hrs)} h</b><span>Total playtime</span></div>`;
   $("#st").textContent = d.updated ? "Updated " + ago(d.updated) : "No data yet. Run the Update stats workflow.";
 }
-
-/* ---------- data + refresh ---------- */
 async function getStats() {
   if (WORKER) { try { const r = await fetch(WORKER + "/stats", { cache: "no-store" }); if (r.ok) return await r.json(); } catch {} }
   return (await fetch("data/stats.json?t=" + Date.now())).json();

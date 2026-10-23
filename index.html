@@ -8,13 +8,23 @@
 <link rel="stylesheet" href="theme.css">
 </head>
 <body>
-<header class="hero"><div class="wrap">
-  <div class="logo">IC</div>
-  <div><h1 id="title">IsraelCraft</h1><p id="sub">&nbsp;</p></div>
-  <div class="chips" id="chips"></div>
-  <div class="ctl"><span id="st"></span><button class="btn" id="rf"><span id="rfi"></span><span>REFRESH</span></button></div>
-</div></header>
-<main class="wrap" id="app"></main>
+<div class="topbar"><div class="wrap"><div><span class="dot"></span>ISRAELCRAFT NETWORK // PLAYER STATS</div><div>JAVA + BEDROCK • VANILLA SURVIVAL • VERSION 26.2</div></div></div>
+<header><div class="wrap"><nav>
+  <a href="#" class="brand"><div class="brand-mark">IC</div><div><strong>ISRAELCRAFT</strong><small>player statistics portal</small></div></a>
+  <div class="navlinks">
+    <a href="#" data-go="players">Players</a><a href="#" data-go="metrics">Metrics</a>
+    <a href="https://glennfb83.github.io/IsraelCraft/" target="_blank" rel="noopener">Main site ↗</a>
+    <a href="https://discord.gg/fUkshKDKEz" target="_blank" rel="noopener">Discord ↗</a>
+    <span id="st"></span>
+    <button class="btn primary" id="rf"><span id="rfi"></span><span>REFRESH</span></button>
+  </div>
+</nav></div></header>
+<main id="app"></main>
+<footer><div class="wrap">
+  <div><strong>ISRAELCRAFT</strong><br>IsraelCraftMPG.exaroton.me</div>
+  <div>Founded by Big P, Glenn &amp; Max.<br>Later joined by Leif and Gabe.</div>
+  <div><span class="classified">OFFICIAL-ISH</span><br>Not affiliated with Mojang or Microsoft.</div>
+</div></footer>
 <script src="config.js"></script>
 <script>
 const CFG = window.CONFIG || {};   // settings live in config.js
@@ -138,9 +148,9 @@ const DIST = [["aviate", "by Elytra"], ["walk", "Walked"], ["sprint", "Sprinted"
   ["horse", "by Horse"], ["minecart", "by Minecart"], ["climb", "Climbed"], ["boat", "by Boat"], ["strider", "by Strider"]];
 
 function details(p) {
-  app.innerHTML = '<button class="btn back">← ALL PLAYERS</button><h2 class="sec">Player details</h2><div class="panel dh"></div><div class="panel sp"><h3>Statistics</h3></div>';
+  app.innerHTML = '<section><div class="wrap"><button class="btn back">← ALL PLAYERS</button><div class="eyebrow">Citizen file</div><h2 class="title">Player details.</h2><div class="card dh"></div><div class="sp"><h3>Statistics</h3></div></div></section>';
   $(".back").onclick = () => { location.hash = ""; };
-  const hd = $(".dh"); hd.append(head(p, 224));
+  const hd = $(".dh"); hd.append(head(p, 192));
   const t = document.createElement("div"); t.innerHTML = `<h3></h3><div class="stt"></div><div class="uuid">${SVG.user}<span></span></div>`;
   $("h3", t).textContent = p.name; status(p, $(".stt", t)); $(".uuid span", t).textContent = p.uuid.toUpperCase(); hd.append(t);
 
@@ -148,7 +158,7 @@ function details(p) {
   const tiles = document.createElement("div"); tiles.className = "tiles";
   [[SVG.clock, "Playtime", play(ticks(p))], [SVG.sword, "Player Kills", num(g(p, "custom", "player_kills"))],
    [SVG.skull, "Deaths", num(g(p, "custom", "deaths"))], [SVG.gauge, "KDR", kdr(p).toFixed(2)]].forEach(([s, l, v]) => {
-    const d = document.createElement("div"); d.className = "tile"; d.innerHTML = `${s}<b>${l}</b><span></span>`;
+    const d = document.createElement("div"); d.className = "tile"; d.innerHTML = `${s}<div><b>${l}</b><span></span></div>`;
     $("span", d).textContent = v; tiles.append(d);
   });
   const cols = document.createElement("div"); cols.className = "cols";
@@ -160,7 +170,7 @@ function details(p) {
   sp.append(tiles, cols);
   if (sets.some((s) => s[1].length > LIMIT)) {
     const m = document.createElement("div"); m.className = "more";
-    m.innerHTML = `<button class="btn"><span>SHOW ALL</span>${SVG.chev}</button>`;
+    m.innerHTML = `<button class="btn primary"><span>SHOW ALL</span>${SVG.chev}</button>`;
     $("button", m).onclick = () => { showAll = !showAll; m.classList.toggle("open", showAll); $("span", m).textContent = showAll ? "SHOW LESS" : "SHOW ALL"; draw(); };
     sp.append(m);
   }
@@ -168,27 +178,36 @@ function details(p) {
 }
 
 function home() {
-  app.innerHTML = '<div class="toolbar"><h2 class="sec">Players</h2><input id="q" type="search" placeholder="Search players" aria-label="Search players"></div><div class="grid"></div>';
+  const ip = (data.server && data.server.address) || "IsraelCraftMPG.exaroton.me";
+  app.innerHTML = `<section class="hero"><div class="wrap"><div class="eyebrow">Population registry. Live from the server.</div>
+    <h1><span>The unofficial player statistics of</span>IsraelCraft.</h1>
+    <p class="hero-copy">Playtime, kills, deaths, blocks broken and everything else the server remembers about its citizens, pulled straight from Exaroton.</p>
+    <div class="hero-actions"><button class="btn primary" data-go="players">VIEW PLAYERS</button><button class="btn" data-go="metrics">VIEW METRICS</button></div>
+    <div class="strip"><span class="chip">IP: ${ip}</span><span class="chip">Players: ${data.players.length}</span><span class="chip">Total playtime: ${num(Math.floor(totalTicks() / 72000))} h</span></div></div></section>
+    <section id="players"><div class="wrap"><div class="section-head"><div><div class="eyebrow">Population registry</div><h2>The citizens.</h2></div>
+    <input id="q" type="search" placeholder="Search players" aria-label="Search players"></div><div class="grid"></div></div></section>`;
   $("#q").value = q; $("#q").oninput = (e) => { q = e.target.value; fill(); }; fill();
   app.append(metrics());
 }
 function metrics() {
-  const el = document.createElement("div"); el.className = "panel metrics";
-  el.innerHTML = '<h3>Player metrics</h3><div class="tbl-wrap"><table class="stats-table"><thead><tr><th>Metric</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th></tr></thead><tbody></tbody></table></div>';
+  const sec = document.createElement("section"); sec.id = "metrics";
+  sec.innerHTML = `<div class="wrap"><div class="section-head"><div><div class="eyebrow">Civic analytics</div><h2>Citizen performance<br>metrics.</h2></div>
+    <p>Comparative statistics across all citizens, ranked by category. Rankings are unofficial and disputed by at least one party at any given time.</p></div>
+    <div class="tbl-wrap"><table class="stats-table"><thead><tr><th>Metric</th><th>1st</th><th>2nd</th><th>3rd</th><th>4th</th></tr></thead><tbody></tbody></table></div></div>`;
   const played = CITIZENS.map(([n, u]) => ({ n, t: ticks(data.players.find((p) => p.uuid === u) || { stats: {} }) })).sort((a, b) => b.t - a.t);
-  const rows = [...METRIC_ROWS.map((r) => [r[0], r.slice(1).map((n) => [n, ""])]),
-    ["Time Played", played.map((x) => [x.n, num(Math.floor(x.t / 72000)) + " h"])]];
-  rows.forEach(([label, cells]) => {
-    const tr = document.createElement("tr");
+  const rows = [...METRIC_ROWS.map((r) => [r[0], r.slice(1).map((n) => [n, ""]), ""]),
+    ["Time Played", played.map((x) => [x.n, num(Math.floor(x.t / 72000)) + " h"]), "new-row"]];
+  rows.forEach(([label, cells, cls]) => {
+    const tr = document.createElement("tr"); tr.className = cls;
     const th = document.createElement("td"); th.textContent = label; tr.append(th);
     cells.forEach(([n, sub], i) => {
       const td = document.createElement("td"); td.className = "rank-" + (i + 1); td.textContent = n;
       if (sub) { const sm = document.createElement("small"); sm.textContent = sub; td.append(sm); }
       tr.append(td);
     });
-    $("tbody", el).append(tr);
+    $("tbody", sec).append(tr);
   });
-  return el;
+  return sec;
 }
 function fill() {
   const gr = $(".grid"); gr.innerHTML = "";
@@ -196,34 +215,34 @@ function fill() {
   const ps = all.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()));
   if (!ps.length) { gr.innerHTML = '<div class="empty">No players found.</div>'; return; }
   ps.forEach((p) => {
-    try {
-      const b = document.createElement("button"); b.className = "panel pc";
-      b.innerHTML = `<div class="pc-in"><div class="hd"></div><span class="nm"></span><span class="stt"></span>
-        <div class="pt"><span>Playtime</span><b class="pv"></b></div><div class="bar"><i></i></div>
-        <div class="share"><b class="sp2"></b> <span class="sl"></span></div>
-        <div class="mini"><div>${SVG.sword}<b>${num(g(p, "custom", "player_kills"))}</b><span>Kills</span></div>
-        <div>${SVG.skull}<b>${num(g(p, "custom", "deaths"))}</b><span>Deaths</span></div>
-        <div>${SVG.gauge}<b>${kdr(p).toFixed(2)}</b><span>KDR</span></div></div></div>`;
-      $(".hd", b).replaceWith(head(p, 168));
-      $(".nm", b).textContent = p.name; status(p, $(".stt", b)); $(".pv", b).textContent = play(ticks(p));
-      if (UNCOUNTED.has(p.uuid)) { $(".bar", b).style.display = "none"; $(".sl", b).textContent = "Not counted in server total"; }
-      else { const pct = ticks(p) / tot * 100; $(".bar i", b).style.width = Math.max(1, pct) + "%";
-        $(".sp2", b).textContent = pct.toFixed(1) + "%"; $(".sl", b).textContent = "of total playtime"; }
-      b.onclick = () => { showAll = false; location.hash = p.uuid; };
-      gr.append(b);
-    } catch (e) { console.error("Couldn't draw", p.name, e); }
+    const b = document.createElement("button"); b.className = "card pc";
+    b.innerHTML = `<div class="pc-top"><div class="hd"></div><div><span class="nm"></span><span class="stt"></span></div></div>
+      <div class="pt"><span>Playtime</span><span class="pv"></span></div><div class="bar"><i></i></div>
+      <div class="share"><span class="sl"></span><b class="sp2"></b></div>
+      <div class="mini"><div>${SVG.sword}<b>${num(g(p, "custom", "player_kills"))}</b><span>Kills</span></div>
+      <div>${SVG.skull}<b>${num(g(p, "custom", "deaths"))}</b><span>Deaths</span></div>
+      <div>${SVG.gauge}<b>${kdr(p).toFixed(2)}</b><span>KDR</span></div></div>`;
+    $(".hd", b).replaceWith(head(p, 144));
+    $(".nm", b).textContent = p.name; status(p, $(".stt", b)); $(".pv", b).textContent = play(ticks(p));
+    if (UNCOUNTED.has(p.uuid)) { $(".bar", b).style.display = "none"; $(".sl", b).textContent = "Not counted in server total"; }
+    else { const pct = ticks(p) / tot * 100; $(".bar i", b).style.width = Math.max(1, pct) + "%";
+      $(".sl", b).textContent = "Share of total playtime"; $(".sp2", b).textContent = pct.toFixed(1) + "%"; }
+    b.onclick = () => { showAll = false; location.hash = p.uuid; };
+    gr.append(b);
   });
 }
 function route() {
   const p = data.players.find((x) => x.uuid === location.hash.slice(1));
   p ? details(p) : home();
 }
-function hero(d) {
-  $("#title").textContent = (d.server && d.server.name) || "IsraelCraft";
-  $("#sub").textContent = (d.server && d.server.address) || "Minecraft server stats";
-  $("#chips").innerHTML = `<div class="chip"><b>${data.players.length}</b><span>Players</span></div><div class="chip"><b>${num(Math.floor(totalTicks() / 72000))} h</b><span>Total playtime</span></div>`;
-  $("#st").textContent = d.updated ? "Updated " + ago(d.updated) : "No data yet. Run the Update stats workflow.";
+function hero(d) { $("#st").textContent = d.updated ? "Updated " + ago(d.updated) : "No data yet"; }
+function go(id) {
+  const to = () => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  if (location.hash.length > 1) { location.hash = ""; setTimeout(to, 120); } else to();
 }
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-go]"); if (t) { e.preventDefault(); go(t.dataset.go); }
+});
 
 /* ---------- data + refresh ---------- */
 async function getStats() {

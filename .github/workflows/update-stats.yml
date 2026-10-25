@@ -15,19 +15,33 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - run: node scripts/fetch-stats.js
+
+      # 1) Get the player stats and save them FIRST, so nothing else can block them
+      - name: Get player stats
+        run: node scripts/fetch-stats.js
         env:
           EXAROTON_TOKEN: ${{ secrets.EXAROTON_TOKEN }}
           EXAROTON_SERVER_ID: ${{ secrets.EXAROTON_SERVER_ID }}
           WORLD_NAME: world   # change if your world folder has a different name
+      - name: Save stats
+        run: |
+          git config user.name "stats-bot"
+          git config user.email "stats-bot@users.noreply.github.com"
+          git add data/stats.json
+          git diff --staged --quiet || (git commit -m "Update stats" && git pull --rebase && git push)
+
+      # 2) Block icons are a bonus. If this part fails, the stats above are already saved.
       - name: Fetch icons
         continue-on-error: true
         run: node scripts/fetch-icons.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Commit changes
+      - name: Save icons
+        continue-on-error: true
         run: |
           git config user.name "stats-bot"
           git config user.email "stats-bot@users.noreply.github.com"
-          git add data icons
-          git diff --staged --quiet || (git commit -m "Update stats" && git pull --rebase && git push)
+          mkdir -p icons data
+          touch icons/.gitkeep
+          git add -A data icons
+          git diff --staged --quiet || (git commit -m "Update icons" && git pull --rebase && git push)

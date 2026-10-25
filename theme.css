@@ -81,4 +81,36 @@ input:focus{outline:2px solid var(--blue);outline-offset:2px}
 .uuid svg{width:18px;height:18px;flex:none}
 .sp h3{margin:0;padding:18px 20px;border-bottom:1px solid var(--ln);font:900 1.5rem var(--sans);letter-spacing:-.03em;display:flex;align-items:center;justify-content:center;gap:12px}
 .sp h3:before,.metrics h3:before{content:"";width:10px;height:10px;border-radius:2px;background:var(--blue2)}
-.metrics h3{margin:0;padding:18px 20px;border-bottom:1px solid var(--ln);font:900
+.metrics h3{margin:0;padding:18px 20px;border-bottom:1px solid var(--ln);font:900 1.5rem var(--sans);letter-spacing:-.03em;display:flex;align-items:center;justify-content:center;gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;padding:24px 20px 6px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--dk2);border-radius:12px;padding:16px 10px}
+.tile svg{width:46px;height:46px}
+.tile b{color:var(--blue2);font:800 1.1rem/1.2 var(--sans)}
+.tile span{font:.88rem var(--pixel);color:var(--cream)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:28px;padding:24px 20px}
+.col h4{margin:0 0 10px;color:var(--blue2);font:800 1.15rem var(--sans)}
+.r{display:flex;align-items:center;justify-content:center;gap:9px;padding:4px 8px;min-height:32px;border-radius:6px;font-size:.92rem}
+.col .r:nth-child(odd){background:rgba(255,255,255,.04)}
+.r:hover{background:rgba(135,174,224,.16)!important}
+.r .n{margin-left:8px;font:.85rem var(--pixel);color:#cfc6ad}
+.r.t{font:800 .85rem var(--pixel);color:var(--cream);background:none!important;border-bottom:1px solid var(--ln);border-radius:0;margin-bottom:4px}
+.r.t .n{color:var(--cream)}
+.ic{width:24px;height:24px;flex:none;object-fit:contain}
+.ph{background:#3a3a3a;border-radius:4px;width:18px;height:18px;margin:3px}
+.more{padding:4px 0 28px}
+.sp .btn{background:var(--blue2);color:#10192e;box-shadow:0 4px 0 #5f86c4}
+.sp .btn:active{box-shadow:0 1px 0 #5f86c4}
+.more svg{transition:transform .2s}.more.open svg{transform:rotate(180deg)}
+
+/* player metrics box (under the players) */
+.metrics{margin-top:34px}
+.tbl-wrap{overflow-x:auto;padding:20px}
+.stats-table{width:100%;border-collapse:collapse;font:.82rem var(--pixel);color:var(--cream)}
+.stats-table th,.stats-table td{border:1px solid var(--ln);padding:12px;text-align:center}
+.stats-table th{background:#0f0f0f}
+.stats-table td:first-child{font-weight:800}
+.stats-table small{display:block;font-size:.7rem;color:var(--mu);font-weight:400}
+.rank-1{color:#e0bc55;font-weight:900}.rank-2{color:#cfcfcf;font-weight:800}.rank-3{color:#d39a68;font-weight:800}.rank-4{color:#a89f86;font-weight:800}
+
+@media(max-width:620px){.hero h1{font-size:1.9rem}.stats-table{font-size:.72rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

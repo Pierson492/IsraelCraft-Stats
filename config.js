@@ -8,6 +8,16 @@ window.CONFIG = {
     "00000000-0000-0000-0009-01fe97d5c010"   // ᴊᴇᴡGamer_Boy1098
   ],
 
+    // Only these players appear in the player list
+  SHOW: [
+    "b4c4e9e8-bda6-4042-8fb3-d32700283ec4", // Pierson562
+    "5206cfb7-8d85-4894-8587-a4a2ee10edbe", // goon_king69
+    "00000000-0000-0000-0009-01f439f05aac", // margit_the_f3
+    "b5057991-9067-4eab-ba3d-e10cd4c6d2df", // GlennFB
+    "00000000-0000-0000-0009-01fd2ffd8d1f", // Einstein1216
+    "00000000-0000-0000-0009-01ff0cc6c72b"  // Vangate1
+  ],
+
   // Players that are shown but NOT counted in total playtime
   UNCOUNTED: [
     "ef0af359-12e3-492a-b5ca-ce696027fc0c"   // Cling22

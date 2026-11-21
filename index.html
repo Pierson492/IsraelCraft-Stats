@@ -233,7 +233,14 @@ async function getStats() {
   return (await fetch("data/stats.json?t=" + Date.now())).json();
 }
 function apply(d) {
-  data = { ...d, players: (d.players || []).filter((p) => SHOW.has(p.uuid) && !HIDE.has(p.uuid))
+  data = {
+    ...d,
+    players: (d.players || []).filter(
+      (p) => SHOW.has(p.uuid) && !HIDE.has(p.uuid)
+    )
+  };
+  hero(data);
+  route();
 }
 function setBusy(on, msg) {
   busy = on; $("#rf").disabled = on; $("#rf").classList.toggle("spin", on);

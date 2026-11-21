@@ -31,12 +31,11 @@ window.CONFIG = {
     ["Leif",    "00000000-0000-0000-0009-01f439f05aac"]    // margit_the_f3 (Bedrock)
   ],
 
-  // Rankings copied from the IsraelCraft site: [metric, 1st, 2nd, 3rd, 4th]
-  // "Time Played" is added automatically from the real playtime.
+  // Rankings in display order: [metric, 1st, 2nd, 3rd, 4th]
   METRIC_ROWS: [
-    ["Morality Level",    "Leif",    "Glenn", "Pierson", "Max"],
-    ["Wealth Level",      "Pierson", "Glenn", "Max",     "Leif"],
-    ["Land Size",         "Pierson", "Max",   "Glenn",   "Leif"],
-    ["Development Level", "Pierson", "Glenn", "Max",     "Leif"]
+    ["Morality",   "Glenn",   "Pierson", "Max",  "Leif"],
+    ["Wealth",     "Pierson", "Max",     "Glenn","Leif"],
+    ["Development","Pierson", "Glenn",   "Max",  "Leif"],
+    ["Land Size",  "Pierson", "Max",     "Glenn","Leif"]
   ]
 };

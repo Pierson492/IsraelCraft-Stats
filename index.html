@@ -19,7 +19,7 @@
 <script>
 const CFG = window.CONFIG || {};   // settings live in config.js
 const WORKER = (CFG.WORKER || "").replace(/\/+$/, "");
-const HIDE = new Set(CFG.HIDE || []);
+const HIDE = new Set(CFG.HIDE || []);const SHOW = new Set(CFG.SHOW || []);
 const UNCOUNTED = new Set(CFG.UNCOUNTED || []);
 const CITIZENS = CFG.CITIZENS || [];
 const METRIC_ROWS = CFG.METRIC_ROWS || [];

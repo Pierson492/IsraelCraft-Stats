@@ -1,106 +1,73 @@
 # IsraelCraft Player Stats
 
-A stats website for the IsraelCraft Minecraft server. It shows every player's playtime, kills, deaths, distance, blocks broken, items used and mobs killed, in the style of the Exaroton player page but themed to match the IsraelCraft site. It runs entirely on GitHub Pages and updates itself.
+A GitHub Pages site for player statistics from the IsraelCraft Minecraft server. The site keeps the IsraelCraft theme, shows a selected group of players, and refreshes stats from Exaroton through GitHub Actions.
 
-## What it shows
+## What the site shows
 
-- A card for every player with their skin, **online status**, playtime and **share of total playtime**
-- A details page per player with the full statistics and 3D block icons
-- A **Citizen performance metrics** table (Morality, Wealth, Land, Development, plus real **Time Played**)
-- A **Refresh** button that can run the update on demand
+- Player cards with skins, online status, playtime, playtime share, kills, deaths, and KDR.
+- A detail page with travel, blocks mined, items used, and entities killed.
+- A Player metrics table for the configured citizen rankings and their recorded playtime.
+- A Refresh button that requests an update through the deployed Cloudflare Worker.
 
-## Folder layout
+The player list is limited to the UUIDs in `SHOW` in `config.js`. The overall playtime total and card percentage bars use every player record in `data/stats.json`; currently that file contains 11 players while the page shows the six selected players.
 
+## How updates work
+
+1. The `Update stats` GitHub Actions workflow runs every 10 minutes and can also be started manually.
+2. The workflow reads player statistics and online status from the Exaroton API, then updates `data/stats.json`.
+3. It fetches any missing block and item textures into `icons/` and updates `data/icons.json`.
+4. GitHub Pages serves the site from the `main` branch root.
+
+The Exaroton token and server ID are stored as GitHub Actions secrets. The website does not contain the Exaroton token.
+
+## Repository files
+
+```text
+index.html                  Page structure, rendering, player filter, and refresh behavior
+theme.css                   Colors, fonts, layout, and visual styles
+config.js                   Worker URL, player UUID lists, and rankings
+data/stats.json             Most recently collected player stats
+data/icons.json             Texture mappings for statistics icons
+icons/                      Block, item, and site logo images
+scripts/fetch-stats.js      Reads player stats from Exaroton
+scripts/fetch-icons.js      Fetches Minecraft block and item textures
+.github/workflows/update-stats.yml
+                            Scheduled and manual stats update workflow
+README.md                   This guide
 ```
-index.html                  the website
-theme.css                   all colors, fonts and looks
-config.js                   settings you edit (rankings, hidden players, Worker address)
-README.md                   this file
-.github/workflows/
-  update-stats.yml          the robot that updates the stats every 10 minutes
-scripts/
-  fetch-stats.js            reads player stats from Exaroton
-  fetch-icons.js            downloads block textures for the icons
-data/
-  stats.json                latest stats (written by the workflow)
-  icons.json                which texture each block/item/mob uses (written by the workflow)
-icons/                      block and item textures (written by the workflow)
-worker/
-  worker.js                 optional Cloudflare Worker for the Refresh button
-```
 
-## How it works
+The Cloudflare Worker is deployed separately and its source is not stored in this repository. The deployed Worker URL is set in `config.js`.
 
-1. A GitHub Action runs about every 10 minutes (or when someone presses Refresh).
-2. It asks the Exaroton API for each player's stat file and the list of online players, and saves them to `data/stats.json`.
-3. It downloads any block textures it hasn't seen yet into `icons/`.
-4. GitHub Pages serves the site, which reads `data/stats.json` and draws everything.
+## Configuration
 
-The Exaroton key is stored as a GitHub secret. It is never in the code.
+- `SHOW` in `config.js` lists the Minecraft UUIDs shown on the site. Add or remove UUIDs there to change the player cards.
+- `HIDE` excludes additional UUIDs from the site.
+- `CITIZENS` and `METRIC_ROWS` configure the Player metrics table.
+- `UNCOUNTED` controls the individual card display for a configured player; the overall site total includes all records from `data/stats.json`.
+- `WORKER` is the base URL of the deployed Cloudflare Worker. It may include a trailing slash.
+- `WORLD_NAME` in `.github/workflows/update-stats.yml` should match the server's world folder.
 
-## Setup
+Player UUIDs can be found in `data/stats.json`.
 
-### 1. Exaroton details
-- API token: exaroton.com, then Account, then API.
-- Server ID: run `curl.exe -H "Authorization: Bearer YOUR_TOKEN" https://api.exaroton.com/v1/servers/` and copy the `id`.
+## Initial setup
 
-### 2. GitHub secrets
-Repo, then Settings, then Secrets and variables, then Actions, then New repository secret:
+1. Add `EXAROTON_TOKEN` and `EXAROTON_SERVER_ID` under the repository's **Settings → Secrets and variables → Actions**.
+2. In GitHub **Settings → Pages**, deploy the `main` branch from the repository root.
+3. Run **Actions → Update stats → Run workflow** once and confirm the run succeeds.
+4. To enable the Refresh button, configure the Cloudflare Worker separately. It needs to serve `/stats` and `/refresh`, trigger this repository's `workflow_dispatch`, and allow the site's origin.
 
-| Name | Value |
-|---|---|
-| `EXAROTON_TOKEN` | your Exaroton API token |
-| `EXAROTON_SERVER_ID` | your server ID |
-
-If your world folder is not called `world`, change `WORLD_NAME` in `.github/workflows/update-stats.yml`.
-
-### 3. Turn on the website
-Settings, then Pages, then Deploy from a branch, then `main` and `/ (root)`, then Save. The repo must be public.
-Your site will be at `https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/`.
-
-### 4. First update
-Actions tab, then **Update stats**, then **Run workflow**. Wait for the green check. The first run is slower because it downloads the block textures.
-
-### 5. Make the Refresh button run the update (optional)
-A public page can't hold a GitHub key, so a free Cloudflare Worker does it safely.
-
-1. Create a fine-grained GitHub token: github.com/settings/personal-access-tokens/new. Pick Only select repositories and choose this repo. Set **Actions: Read and write** and **Contents: Read-only**.
-2. In Cloudflare (dash.cloudflare.com), go to Workers & Pages, then Create, then Create Worker. Name it `mc-stats`, deploy it, click Edit code, paste in `worker/worker.js`, and deploy.
-3. In the Worker, go to Settings, then Variables and Secrets, and add:
-   - `GITHUB_TOKEN` (type Secret): your token
-   - `REPO` : `YOUR-USERNAME/YOUR-REPO-NAME`
-   - `ALLOWED_ORIGIN` : `https://YOUR-USERNAME.github.io`
-4. Put the Worker address in `config.js` as `WORKER: "https://mc-stats.yourname.workers.dev"`.
-
-GitHub tokens expire. If Refresh stops working one day, make a new token and update the Worker secret.
-
-## Changing things
-
-| I want to... | Edit |
-|---|---|
-| Change a ranking, a name, or add a metric row | `config.js` (`METRIC_ROWS`, `CITIZENS`) |
-| Hide a player completely | `config.js` (`HIDE`), and `EXCLUDE` in `scripts/fetch-stats.js` |
-| Show a player but leave them out of total playtime | `config.js` (`UNCOUNTED`) |
-| Change colors, fonts or the logo look | `theme.css` |
-| Change the update speed | the `cron` line in `.github/workflows/update-stats.yml` |
-
-Players are identified by their Minecraft UUID. You can find one in the `uuid` field of `data/stats.json`.
+The current site URL is `https://Pierson492.github.io/IsraelCraft-Stats/`.
 
 ## Troubleshooting
 
-| Problem | Fix |
+| Symptom | Check |
 |---|---|
-| Site says "Couldn't load stats" | Pages is not on yet, or you opened the file from your computer. Use the github.io address. |
-| Workflow fails with `Missing EXAROTON_TOKEN` | A secret is missing or misspelled. |
-| Workflow fails finding the stats folder | Check `WORLD_NAME`, and that players have joined at least once. |
-| `Permission denied` when pushing | Settings, then Actions, then General, then Workflow permissions: Read and write. |
-| Gray squares instead of block icons | The workflow has not finished once since the icons were added. Run it again. |
-| Online/Offline looks stale | It is only as fresh as the last update. Press Refresh or run the workflow. |
-| A player shows a default Steve head | Bedrock players have no Java skin to look up. |
-| Refresh does nothing new | `WORKER` in `config.js` is empty or wrong, or the Worker token expired. |
+| No player cards appear | Confirm `SHOW` contains the intended UUIDs and `data/stats.json` has those players. |
+| The site shows old stats | Check the latest `Update stats` run and the `updated` field in `data/stats.json`. |
+| The workflow reports missing Exaroton settings | Check the `EXAROTON_TOKEN` and `EXAROTON_SERVER_ID` repository secrets. |
+| Refresh does not start an update | Check the deployed Worker, its `/refresh` route, allowed site origin, and GitHub Actions token. |
+| Block/item icons are missing | Run the workflow again; icon fetching is a separate best-effort step. |
 
 ## Notes
 
-- The repo must be public for free GitHub Pages, so player names, UUIDs and stats are public.
-- Block textures come from the open `misode/mcmeta` repository of Minecraft's assets. Not affiliated with Mojang or Microsoft.
-- The visual style is copied from the main IsraelCraft site.
+The repository is public and GitHub Pages is public, so player names, UUIDs, and statistics in `data/stats.json` are public. Minecraft assets are fetched from the open `misode/mcmeta` repository; this project is not affiliated with Mojang or Microsoft.

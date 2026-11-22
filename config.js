@@ -33,7 +33,7 @@ window.CONFIG = {
 
   // Rankings in display order: [metric, 1st, 2nd, 3rd, 4th]
   METRIC_ROWS: [
-    ["Morality",   "Glenn",   "Pierson", "Max",  "Leif"],
+    ["Morality",   "Pierson",   "Max", "Glenn",  "Leif"],
     ["Wealth",     "Pierson", "Max",     "Glenn","Leif"],
     ["Development","Pierson", "Glenn",   "Max",  "Leif"],
     ["Land Size",  "Pierson", "Max",     "Glenn","Leif"]
